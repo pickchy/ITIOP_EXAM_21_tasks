@@ -1,0 +1,140 @@
+#include <iostream>
+
+struct elems {
+	char key[11];
+	char name[26];
+	float value;
+};
+
+struct table {
+	elems el[10];
+};
+
+int compare(table t, char c[], int i) {
+	for (int l = 0; l < 10; l++) {
+		if (c[l] > t.el[i].key[l]) {
+			return 1;
+		}
+		else {
+			if (c[l] < t.el[i].key[l]) {
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
+
+int main() {
+
+	setlocale(LC_ALL, "Russian");
+
+	table t;
+	char c = '*';
+	int i = 0;
+	int j = 0;
+	int n = 0;
+
+	FILE* f;
+
+	fopen_s(&f, "E:\\input.txt", "r");
+
+	if (f == NULL) {
+		std::cout << "file error";
+		return -1;
+	}
+
+
+	while (!feof(f)) {
+
+		t.el[i].key[10] = char(0);
+		t.el[i].name[25] = char(0);
+
+		fscanf_s(f, "%c", &c, 1);
+
+		for (j = 0; j < 10; j++) {
+			t.el[i].key[j] = c;
+			fscanf_s(f, "%c", &c, 1);
+		}
+
+		j = 0;
+		int d = 3;
+		fscanf_s(f, "%c", &c, 1);
+		while (d != 0) {
+			t.el[i].name[j] = c;
+			j++;
+			fscanf_s(f, "%c", &c, 1);
+			if (c == ' ') d = d - 1;
+		}
+
+		for (int k = j; k < 25; k++) {
+			t.el[i].name[j] = char(0);
+		}
+
+		fscanf_s(f, "%f", &t.el[i].value);
+		fscanf_s(f, "%c", &c, 1); //пропускает enter
+		i++;
+		n++;
+	}
+
+	fclose(f);
+
+	elems el1;
+	el1.key[10] = char(0);
+	el1.name[25] = char(0);
+	el1.value = (float)0;
+
+	std::cout << "Введите шифр, имя и средний балл нового студента\n";
+
+	for (j = 0; j < 10; j++) {
+		scanf_s("%c", &el1.key[j] , 1);
+	}
+
+	i = 0;
+	int u = 0;
+
+	for (j = 0; j < 3; j++) {
+		char m[10];
+		u = 0;
+		std::cin >> m;
+		while (m[u] != NULL) {
+			el1.name[i] = m[u];
+			i++;
+			u++;
+		}
+		el1.name[i] = ' ';
+		i++;
+	}
+
+	for (int h = i; h < 25; h++) {
+		el1.name[h] = char(0);
+	}
+
+	std::cin >> el1.value;
+
+	for (i = 0; i < n; i++) {
+		if (compare(t, el1.key, i)) break;
+	}
+
+	if ((i == n - 1) and (!compare(t, el1.key, i))) {
+		t.el[i + 1] = el1;
+	}
+	else {
+		for (int b = i; b < n; b++) {
+			t.el[n - b + i] = t.el[n - 1 - b + i];
+		}
+		t.el[i] = el1;
+	}
+
+	for (int b = 0; b < n + 1; b++) {
+		std::cout << t.el[b].key << ' ' << t.el[b].name << ' ' << t.el[b].value << '\n';
+	}
+
+	return 0;
+
+}
+//В файле содержатся элементы упорядоченной по убыванию ключа таблицы следующего вида: Шифр студента (10 символов), ФИО студента (25 символов). 
+//Средний балл (вещественное). Ключ элемента – шифр студента. 
+//Ключ таблицы однозначно определяет ее элемент. 
+//Количество элементов не превышает 100. 
+//Используя бинарный поиск, включить в таблицу еще один элемент.
