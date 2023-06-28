@@ -1,0 +1,142 @@
+#include <iostream>
+
+struct list {
+    char el;
+    list* next;
+};
+
+list* add(list* go, list* head, char c) {
+    go->el = c;
+    go->next = new list;
+    go = go->next;
+    go->next = head;
+    go->el = NULL;
+    return(go);
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+
+
+    list* s1 = new list;
+    list* go1 = s1;
+    go1->next = s1;
+
+    list* s2 = new list;
+    list* go2 = s2;
+    go2->next = s2;
+
+    char c = '*';
+
+    int length1 = 0;
+    int length2 = 0;
+
+    FILE* f;
+    fopen_s(&f, "E:\\input.txt", "r");
+
+    if (f == NULL) {
+        std::cout << "Файл не найден";
+        return -1;
+    }
+
+    while (c != ' ') {
+        fscanf_s(f, "%c", &c);
+        if (c == ' ') {
+            break;
+        }
+        go1 = add(go1, s1, c);
+        length1 += 1;
+    }
+
+    while (!feof(f)) {
+        fscanf_s(f, "%c", &c);
+        go2 = add(go2, s2, c);
+        length2 += 1;
+    }
+
+    length2 -= 1;
+
+    fclose(f);
+
+    list* p = s1; //удаление пустых элементов списка
+
+    while (p->next->el != NULL) {
+        p = p->next;
+    }
+
+    p->next = p->next->next;
+
+    p = s2;
+
+    while (p->next->el != NULL) {
+        p = p->next;
+    }
+
+    p->next = p->next->next; // закончилось тут
+   
+
+    go1 = s1;
+    go2 = s2;
+
+    if (length1 > length2) {
+        std::cout << "S1 не входит в S2\n";
+        while (go2->next != s2) {
+            go2 = go2->next;
+        }
+        while (go1->next != s1) {
+            go1 = go1->next;
+        }
+        go1->next = s2;
+        go2->next = s1;
+        go1 = s1;
+        for (int i = 0; i < length1 + length2; i++) {
+            std::cout << go1->el;
+            go1 = go1->next;
+        }
+        return 0;
+    }
+
+    int enter = 0;
+
+    for (int i = 0; i < length1; i++) {
+        for (int j = 0; j < length2; j++) {
+            if (go1->el == go2->el) {
+                enter++;
+            }
+            go2 = go2->next;
+            go1 = go1->next;
+        }
+        if (enter == length1) {
+            std::cout << "S1 входит в S2";
+            return 0;
+        }
+        go1 = s1;
+        go2 = s2;
+        for (int k = 0; k <= i; k++) {
+            go2 = go2->next;
+        }
+        enter = 0;
+    }
+
+    std::cout << "S1 не входит в S2\n";
+    while (go2->next != s2) {
+        go2 = go2->next;
+    }
+    while (go1->next != s1) {
+        go1 = go1->next;
+    }
+    go1->next = s2;
+    go2->next = s1;
+    go1 = s1;
+    for (int i = 0; i < length1 + length2; i++) {
+        std::cout << go1->el;
+        go1 = go1->next;
+    }
+    return 0;
+
+}
+//1.	В текстовом файле даны две последовательности символов, разделенные пробелом. 
+//Написать подпрограмму, которая для двух однонаправленных циклических списков S1 и S2 проверяет, входит ли список S1 в список S2.
+// Используя эту подпрограмму. проверить входит ли первая последовательность во вторую, если не входит, добавить список S1 к списку S2. 
