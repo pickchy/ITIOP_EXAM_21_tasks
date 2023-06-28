@@ -1,0 +1,85 @@
+#include <iostream>
+
+struct list {
+	int n;
+	list* next;
+};
+
+
+
+int main() {
+
+	setlocale(LC_ALL, "Russian");
+
+	list* head = new list;
+	list* go = head;
+	list* el = head;
+	go->next = NULL;
+	
+	FILE* f;
+
+	fopen_s(&f, "E:\\input.txt", "r");
+
+	if (f == NULL) {
+		std::cout << "file error";
+		return -1;
+	}
+
+	while (!feof(f)) {
+		fscanf_s(f, "%d", &go->n);
+		go->next = new list;
+		go = go->next;
+		go->next = NULL;
+		go->n = 0;
+	}
+
+	fclose(f);
+
+	go = head;
+
+	int g = 0;
+
+	std::cout << "Укажите элемент\n";
+	std::cin >> g;
+
+	while (go->next != NULL) {
+		if (go->n == g) {
+			el = go;
+		}
+		go = go->next;
+	}
+
+	if (go->n == g) {
+		el = go;
+	}
+
+	go = head;
+
+	while (go->next != NULL) {
+		if (go->next->n == g) {
+			if (go->next != el) {
+				list* t = go->next;
+				go->next = go->next->next;
+				delete(t);
+			}
+			else {
+				break;
+			}
+		}
+		go = go->next;
+	}
+
+	go = head;
+
+	while (go->next != NULL) {
+		std::cout << go->n;
+		go = go->next;
+	}
+
+	return 0;
+
+}
+
+//1.	В текстовом файле дана последовательность чисел. 
+//Написать подпрограмму, которая в однонаправленном списке оставляет только последнее вхождение заданного элемента. 
+//Используя эту подпрограмму, преобразовать заданную последовательность

@@ -1,0 +1,76 @@
+#include <iostream>
+
+struct list {
+	int n;
+	list* next;
+};
+
+
+int main() {
+
+	setlocale(LC_ALL, "Russian");
+
+	list* head = new list;
+	list* go = head;
+	go->n = 0;
+	go->next = new list;
+	go->next->n = 0;
+	go->next->next = NULL;
+
+	int a = 0;
+	list* support = head;
+	
+	FILE* f;
+
+	fopen_s(&f, "E:\\input.txt", "r");
+
+	if (f == NULL) {
+		std::cout << "file error";
+		return -1;
+	}
+
+
+	while (!feof(f)) {
+		fscanf_s(f, "%d", &a);
+
+		if (a < 0) {
+			std::cout << "Последовательность чисел не натуральная";
+			return 0;
+		}
+
+		go = head;
+
+		while ((a >= go->n)and(go->next != NULL)) {
+			support = go;
+			go = go->next;
+		}
+
+		if (go->next == NULL) {
+			go->n = a;
+			go->next = new list;
+			go->next->next = NULL;
+		}
+		else {
+			support->next = new list;
+			support->next->n = a;
+			support->next->next = go;
+		}
+
+	}
+
+	fclose(f);
+
+	go = head->next;
+
+	while (go->next != NULL) {
+		std::cout << go->n;
+		go = go->next;
+	}
+
+	return 0;
+
+}
+
+}
+//1.	В текстовом файле дана последовательность натуральных чисел, оканчивающаяся нулем. 
+//Используя очередь с приоритетом напечатать числа последовательности по возрастанию.

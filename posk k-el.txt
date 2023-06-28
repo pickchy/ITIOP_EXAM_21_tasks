@@ -1,0 +1,64 @@
+#include <iostream>
+
+struct list {
+	int n;
+	list* next;
+};
+
+int find(list* go, int a) {
+	for (int i = 0; i < a; i++) {
+		go = go->next;
+	}
+	return go->n;
+}
+
+int main() {
+
+	setlocale(LC_ALL, "Russian");
+
+	list* head = new list;
+	list* go = head;
+	go->next = head;
+	
+	FILE* f;
+
+	fopen_s(&f, "E:\\input.txt", "r");
+
+	if (f == NULL) {
+		std::cout << "file error";
+		return -1;
+	}
+
+	fscanf_s(f, "%d", &go->n);
+
+	while (!feof(f)) {
+		go->next = new list;
+		go = go->next;
+		fscanf_s(f, "%d", &go->n);
+		go->next = head;
+	}
+
+	fclose(f);
+
+
+	int x = 0;
+	std::cout << "Укажите номер первого элемента\n";
+	std::cin >> x;
+	int y = 0;
+	std::cout << "Укажите номер второго элемента\n";
+	std::cin >> y;
+
+	if ((x <= 0) or (y <= 0)) {
+		std::cout << "Введён неверный номер";
+	}
+
+	go = head;
+
+	std::cout << (find(go, x) - find(go, y));
+
+	return 0;
+
+}
+
+//1.	В текстовом файле дана последовательность чисел. Написать подпрограмму поиска k-го элемента однонаправленного циклического списка, считая, что k - номер элемент, а нумерация начинается с 1 от 1-го элемента списка. 
+//Учесть возможную некорректность задания k. Используя эту подпрограмму. вычислить разность элементов заданной последовательности с номерами x и у 

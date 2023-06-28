@@ -1,0 +1,58 @@
+#include <iostream>
+#include "stdio.h"
+
+using namespace std;
+
+
+struct list {
+	float el=NULL;
+	list* next = NULL, * pred = NULL;
+};
+
+
+void sred_arif(list* t,int max, float *sred) {
+	int total = 0;
+	float sum = 0;
+	for (int i = 0; i < max; i++) {
+		if (t->el >= 0) {
+			sum += t->el;
+			total += 1;
+		}
+		t = t->pred;
+	}
+	*sred = sum / total;
+}
+
+
+int main()
+{
+	float sred = 0;
+	char h = '0';
+	int total = 0;
+	float a;
+	list* headlist, * end;
+	end = headlist = new list;
+	FILE* fp;
+	fopen_s(&fp, "D:\input.txt", "r");
+	if (fp == NULL)
+		cout << "Error";
+	else {
+		while (!feof(fp)) {
+			fscanf_s(fp, "%f", &a);
+			end->next = new list;
+			end->next->pred = end;
+			end = end->next;
+			end->el = a;
+			total += 1;
+			fscanf_s(fp, "%c", &h,1);
+		}
+	}
+	fclose(fp);
+	sred_arif(end, total, &sred);
+	cout << sred;
+}
+
+//Билет 3
+1.	В текстовом файле дана последовательность чисел. 
+//Написать подпрограмму, которая находит среднее арифметическое неотрицательных элементов двунаправленного списка.
+// Используя эту подпрограмму, вычислить среднее арифметическое заданной последовательности.

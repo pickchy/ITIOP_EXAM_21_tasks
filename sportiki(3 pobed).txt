@@ -1,0 +1,80 @@
+#include <iostream>
+#include <stdio.h>
+
+using namespace std;
+
+
+struct elems {
+	int  num = 0;
+	float start = 0;
+	float fin = 0;
+};
+
+struct table {
+	elems el[10];
+};
+
+void del(table* t, int key, int *count) {
+	for (int i = 0; i < *count; i++) {
+		if (t->el[i].num == key) {
+			for (int j = i; j < *count; j++) {
+				t->el[j] = t->el[j + 1];
+			}
+			*count -= 1;
+			break;
+		}
+	}
+}
+
+
+int main()
+{
+	int  flag = 0;
+	char prob = ' ';
+	int m = 10;
+	table* t = new table;
+	int num = 0;
+	float start = 0, fin = 0;
+	FILE* fp;
+	fopen_s(&fp, "D:\input.txt", "r");
+	if (fp == NULL) {
+		printf("Ошибка файла");
+	}
+	else {
+		for (int i = 0; i < m; i++)
+		{
+			fscanf_s(fp, "%d", &num);
+			if (feof(fp)) {
+				m = i;
+				break;
+			}
+			t->el[i].num = num;
+			fscanf_s(fp, "%c", &prob, 1);
+			fscanf_s(fp, "%f", &start);
+			t->el[i].start = start;
+			fscanf_s(fp, "%c", &prob, 1);
+			fscanf_s(fp, "%f", &fin);
+			t->el[i].fin = fin;
+			fscanf_s(fp, "%c", &prob, 1);
+		}
+		fclose(fp);
+	}
+	int count = 0;
+	while (count != 3) {
+		float avg = t->el[0].fin - t->el[0].start;
+		num = t->el[0].num;
+		for (int i = 1; i < m; i++) {
+			float vnutr = t->el[i].fin - t->el[i].start;
+			if (vnutr < avg) {
+				avg = vnutr;
+				num = t->el[i].num;
+			}
+		}
+		cout << num << ' ';
+		del(t, num, &m);
+		count += 1;
+	}
+}
+//1.	В таблице хранится информация о результатах забега в кроссе. 
+//Элемент таблицы имеет следующую структуру: номер спортсмена (целое), время старта (вещественное), время финиша (вещественное). 
+//Найти номера трех призеров забега и их результаты.

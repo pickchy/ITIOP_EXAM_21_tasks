@@ -1,0 +1,59 @@
+#include <iostream>
+
+struct list {
+	char c;
+	list* next;
+	list* prev;
+};
+
+void out(list* go) {
+
+	FILE* f;
+
+	fopen_s(&f, "E:\\input.txt", "r");
+
+	if (f == NULL) {
+		std::cout << "file error";
+		return;
+	}
+
+
+	while (!feof(f)) {
+		go->next = new list;
+		go->next->prev = go;
+		go = go->next;
+		go->next = NULL;
+		fscanf_s(f, "%c", &(go->c), 1);
+	}
+
+	fclose(f);
+
+	go = go->prev->prev;
+
+	while (go->prev != NULL) {
+		std::cout << go->c;
+		go = go->prev;
+	}
+}
+
+int main() {
+
+	setlocale(LC_ALL, "Russian");
+
+	list* head = new list;
+	head->prev = NULL;
+	head->next = NULL;
+	list* go = head;
+	
+
+
+	out(go);
+
+	return 0;
+
+}
+
+}
+//1.	В текстовом файле дана последовательность символов, оканчивающаяся точкой. 
+//Написать подпрограмму, которая печатает эту последовательность в обратном порядке. 
+//Используя эту подпрограмму, напечатать заданную последовательность.

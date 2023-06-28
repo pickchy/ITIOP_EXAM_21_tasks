@@ -1,0 +1,52 @@
+#include <iostream>
+#include "stdio.h"
+
+using namespace std;
+
+
+struct list {
+	float el=NULL;
+	list* next = NULL;
+};
+
+
+void printReverse(list* head) {
+	if (head == NULL) {
+		return;
+	}
+	printReverse(head->next);
+	cout << head->el << " ";
+}
+
+
+
+
+int main()
+{
+	char h = '0';
+	int total = 0;
+	float a;
+	list* headlist, * end;
+	end = headlist = new list;
+	FILE* fp;
+	fopen_s(&fp, "D:\input.txt", "r");
+	if (fp == NULL)
+		cout << "Error";
+	else {
+		while (!feof(fp)) {
+			fscanf_s(fp, "%f", &a);
+			end->next = new list;
+			end = end->next;
+			end->el = a;
+			total += 1;
+			fscanf_s(fp, "%c", &h,1);
+		}
+	}
+	fclose(fp);
+	printReverse(headlist->next);
+
+}
+
+//1.	В текстовом файле дана последовательность чисел. 
+//Написать рекурсивную подпрограмму, которая печатает в обратном порядке элементы непустого однонаправленного списка. 
+//Используя эту подпрограмму, напечатать заданную последовательность в обратном порядке. 

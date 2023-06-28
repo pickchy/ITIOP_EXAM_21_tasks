@@ -1,0 +1,106 @@
+#include <iostream>
+
+struct list {
+	int n;
+	list* next;
+};
+
+int sort(list* head) {
+	list* support = head;
+	while (support->next != NULL) {
+		if (support->next->n > support->n) {
+			return 0; //не упорядочена
+		}
+		support = support->next;
+	}
+	return 1; //упорядочена
+}
+
+int main() {
+
+	setlocale(LC_ALL, "Russian");
+
+	list* head = new list;
+	head->next = NULL;
+	list* go = head;
+	
+	FILE* f;
+
+	fopen_s(&f, "E:\\input.txt", "r");
+
+	if (f == NULL) {
+		std::cout << "file error";
+		return -1;
+	}
+
+	fscanf_s(f, "%d", &(go->n));
+	go->next = new list;
+	go = go->next;
+	go->next = NULL;
+
+	while (!feof(f)) {
+		fscanf_s(f, "%d", &(go->n));
+		go->next = new list;
+		go = go->next;
+		go->next = NULL;
+	}
+
+	fclose(f);
+
+	go = head;
+
+	if (sort(head)) {
+		int p = 0;
+		std::cout << "Введите натуральное число\n";
+		std::cin >> p;
+		list* support = head;
+		while ((p < go->n)and(go->next != NULL)) {
+			support = go;
+			go = go->next;
+		}
+
+		if ((support == head) and (p > head->n)) {
+			support = new list;
+			support->n = p;
+			support->next = head;
+			head = support;
+		}
+		else {
+			if ((go->next == NULL) and (p < go->n)) {
+				go->next = new list;
+				go->next->n = p;
+				go->next->next = NULL;
+			}
+			else {
+				support->next = new list;
+				support->next->n = p;
+				support->next->next = go;
+			}
+		}
+	}
+	else {
+		int k = 0;
+		std::cout << "Введите номер удаляемого элемента\n";
+		std::cin >> k;
+		list* support = head;
+		for (int i = 0; i < k - 1; i++) {
+			support = go;
+			go = go->next;
+		}
+		support->next = go->next;
+		delete(go);
+	}
+
+	go = head;
+
+	while (go->next != NULL) {
+		std::cout << go->n;
+		go = go->next;
+	}
+
+	return 0;
+
+}
+//1.	В текстовом файле дана последовательность чисел. 
+//Написать подпрограмму, которая проверяет, упорядочена ли по убыванию последовательность действительных чисел, хранящаяся в однонаправленном списке. 
+//Используя эту подпрограмму преобразовать заданную последовательность следующим образом, если она упорядочена, то, не нарушая упорядоченности, вставить в нее элемент со значением р, иначе удалить элемент с номером k. 

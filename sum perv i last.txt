@@ -1,0 +1,65 @@
+#include <iostream>
+
+struct list {
+	float n;
+	list* next;
+};
+
+float last(list* go) {
+	while (go->next->next != NULL) {
+		go = go->next;
+	}
+	return (go->n + go->next->n);
+}
+
+
+int main() {
+
+	setlocale(LC_ALL, "Russian");
+
+	list* head = new list;
+	list* go = head;
+	go->next = NULL;
+
+	float p = 0;
+	
+	FILE* f;
+
+	fopen_s(&f, "E:\\input.txt", "r");
+
+	if (f == NULL) {
+		std::cout << "file error";
+		return -1;
+	}
+
+
+	fscanf_s(f, "%f", &p);
+	go->n = p;
+
+	while (!feof(f)) {
+		go->next = new list;
+		go = go->next;
+		fscanf_s(f, "%f", &p);
+		go->n = p;
+		go->next = NULL;
+	}
+
+	fclose(f);
+
+	go = head;
+
+	if (go->next == NULL) {
+		std::cout << "В последовательности меньше двух элементов";
+		return 0;
+	}
+
+
+	printf("%f", last(go));
+	
+
+	return 0;
+
+}
+//1.	В текстовом файле дана последовательность вещественных чисел. Написать подпрограмму, которая находит сумму последнего и предпоследнего элементов однонаправленного списка. 
+//Используя эту подпрограмму, вычислить сумму двух последних элементов заданной последовательности. 
+//Учесть возможность отсутствия этих элементов.

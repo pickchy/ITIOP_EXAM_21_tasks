@@ -1,0 +1,93 @@
+#include <iostream>
+#include <stdio.h>
+
+using namespace std;
+
+struct Product {
+    char name[20];
+    float price;
+    Product* left;
+    Product* right;
+};
+
+Product* createNode(char name[20], float price) {
+    Product* node = new Product;
+    strncpy_s(node->name, name, 20);
+    node->price = price;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+Product* insert(Product* root, char name[20], float price) {
+    if (root == NULL) {
+        return createNode(name, price);
+    }
+    if (price < root->price) {
+        root->left = insert(root->left, name, price);
+    }
+    else {
+        root->right = insert(root->right, name, price);
+    }
+    return root;
+}
+
+void printInOrder(Product* root) {
+    if (root != NULL) {
+        printInOrder(root->left);
+        cout << root->name << " " << root->price << endl;
+        printInOrder(root->right);
+    }
+}
+
+Product* removeMax(Product* root) {
+    if (root->right == NULL) {
+        Product* temp = root->left;
+        delete root;
+        return temp;
+    }
+    root->right = removeMax(root->right);
+    return root;
+}
+
+Product* removeMaxProduct(Product* root) {
+    if (root == NULL) {
+        return NULL;
+    }
+    if (root->right == NULL) {
+        Product* temp = root->left;
+        delete root;
+        return temp;
+    }
+    root->right = removeMax(root->right);
+    return root;
+}
+
+int main() {
+    char name[20];
+    float price;
+    Product* t = NULL;
+    FILE* fp;
+    fopen_s(&fp, "D:\input.txt", "r");
+    if (fp == NULL) {
+        printf("Ошибка файла");
+    }
+    else {
+        while (fscanf_s(fp, "%s %f", name, 20, &price) != EOF) {
+            t = insert(t, name, price);
+        }
+        fclose(fp);
+    }
+    cout << "tree do udalenia:" << endl;
+    printInOrder(t);
+
+    t = removeMaxProduct(t);
+
+    cout << "tree after delete:" << endl;
+    printInOrder(t);
+
+    return 0;
+}
+//1.	В текстовом файле дана информация о товарах вида : наименование(не более 20 символов), цена(вещественное).
+//Представив эту последовательность в виде дерева поиска, удалить из нее самый дорогой товар.
+//Написать подпрограмму удаления наибольшего элемента из дерева поиска.

@@ -1,0 +1,75 @@
+#include <iostream>
+#include "stdio.h"
+
+using namespace std;
+
+
+struct list {
+	char el = NULL;
+	list* next = NULL;
+};
+
+
+void vivod(list* t) {
+	while (t != NULL) {
+		cout << t->el << ' ';
+		t = t->next;
+	}
+}
+
+int del(list* l, char x)
+{
+	while (l->next != NULL and l->next->el != x) {
+		l = l->next;
+	}
+		if (l->next)
+		{
+			list* p = l->next;
+			l->next = p->next;
+			delete p;
+			return 1;
+		}
+		else
+			return 0;
+}
+
+
+
+int main()
+{
+	int total = 0;
+	char h = '0';
+	list* headlist, * end;
+	end = headlist = new list;
+	FILE* fp;
+	fopen_s(&fp, "D:\input.txt", "r");
+	if (fp == NULL)
+		cout << "Error";
+	else {
+		fscanf_s(fp, "%c", &h, 1);
+		while (!feof(fp)) {
+			end->next = new list;
+			end = end->next;
+			end->el = h;
+			total += 1;
+			fscanf_s(fp, "%c", &h, 1);
+			if (h == ',') {
+				while (!feof(fp)) {
+					int count = 0;
+					fscanf_s(fp, "%c", &h, 1);
+					while (1) {
+						if (del(headlist, h) == 0)
+							break;
+					}
+
+				}
+			}
+		}
+	}
+	fclose(fp);
+	vivod(headlist->next);
+
+}
+//1.	В текстовом файле даны две последовательности символов, разделенные запятой.
+//Написать подпрограмму, которая удаляет из однонаправленного списка все вхождения заданного элемента.Используя эту подпрограмму.
+//удалить из первой последовательности все элементы, входящие во вторую последовательность.

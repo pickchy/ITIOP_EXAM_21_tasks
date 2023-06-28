@@ -1,0 +1,61 @@
+#include <iostream>
+
+struct list {
+	float n;
+	list* next;
+};
+
+void arif(list* head, list* go, float s, float i) {
+	s = (float)s + (float)go->n;
+	i = (float)i + (float)1;
+	if (go->next != NULL) {
+		go = go->next;
+		arif(head, go, (float)s, i);
+	}
+	else {
+		s = (float)s / (float)(i-1);
+		std::cout << "Среднее арифметическое: ";
+		printf("%f", s);
+	}
+}
+
+int main() {
+
+	setlocale(LC_ALL, "Russian");
+
+	list* head = new list;
+	list* go = head;
+	go->next = NULL;
+	
+	FILE* f;
+
+	fopen_s(&f, "E:\\input.txt", "r");
+
+	if (f == NULL) {
+		std::cout << "file error";
+		return -1;
+	}
+
+	while (!feof(f)) {
+		fscanf_s(f, "%f", &go->n);
+		go->next = new list;
+		go = go->next;
+		go->next = NULL;
+		go->n = 0;
+	}
+
+	fclose(f);
+
+	float s = (float)0;
+	float i = (float)0;
+
+	go = head;
+
+	arif(head, go, s, i);
+
+	return 0;
+
+}
+//1.	В текстовом файле дана последовательность чисел. 
+//Написать рекурсивную подпрограмму, которая вычисляет среднее арифметическое элементов непустого однонаправленного списка. 
+//Используя эту подпрограмму. вычислить среднее арифметическое чисел заданной последовательности

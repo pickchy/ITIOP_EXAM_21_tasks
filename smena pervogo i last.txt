@@ -1,0 +1,60 @@
+#include <iostream>
+#include "stdio.h"
+
+using namespace std;
+
+
+struct list {
+	float el=NULL;
+	list* next = NULL, * pred = NULL;
+};
+
+void vivod(list* t, int max) {
+	for (int i = 0; i < max; i++) {
+		t = t->next;
+		cout << t->el << ' ';
+	}
+}
+
+
+void smena(list* t) {
+	char last = t->el;
+	t->el = t->next->el;
+	t->next->el = last;
+}
+
+
+int main()
+{
+	char h = '0';
+	int total = 0;
+	float a;
+	list* headlist, * end;
+	end = headlist = new list;
+	FILE* fp;
+	fopen_s(&fp, "D:\input.txt", "r");
+	if (fp == NULL)
+		cout << "Error";
+	else {
+		while (!feof(fp)) {
+			fscanf_s(fp, "%f", &a);
+			end->next = new list;
+			end->next->pred = end;
+			end = end->next;
+			end->el = a;
+			total += 1;
+			fscanf_s(fp, "%c", &h,1);
+		}
+		end->next = headlist->next;
+		headlist->next->pred = end;
+	}
+	fclose(fp);
+	vivod(end, total);
+	smena(end);
+	cout << '\n';
+	vivod(end, total);
+}
+
+//1.	В текстовом файле дана последовательность чисел. 
+//Написать подпрограмму. которая меняет местами первый и последний элементы двунаправленного циклического списка. 
+//Используя эту подпрограмму, преобразовать заданную последовательность 

@@ -1,0 +1,116 @@
+#include <iostream>
+
+struct elems {
+	char surname[15];
+	int old;
+};
+
+
+
+int main() {
+
+	setlocale(LC_ALL, "Russian");
+
+	elems table[12];
+	
+	FILE* f;
+	char c = '*';
+	int i = 0;
+	int j = 0;
+
+	fopen_s(&f, "E:\\input.txt", "r");
+
+	if (f == NULL) {
+		std::cout << "file error";
+		return -1;
+	}
+
+
+	while (!feof(f)) {
+		j = 0;
+		fscanf_s(f, "%c", &c, 1);
+		while (c != ' ') {
+			table[i].surname[j] = c;
+			j++;
+			fscanf_s(f, "%c", &c, 1);
+		}
+		for (int k = j; k < 15; k++) {
+			table[i].surname[j] = char(0);
+		}
+		fscanf_s(f, "%d", &table[i].old);
+		fscanf_s(f, "%c", &c, 1); //пропускает enter
+		i++;
+	}
+
+	fclose(f);
+
+	char str1[15];
+	char str2[15];
+
+	std::cout << "Укажите фамилию ждущего очереди пациента: ";
+	std::cin >> str1;
+	std::cout << "Укажите фамилию вошедшего пациента: ";
+	std::cin >> str2;
+
+	int k = 0; //Для проверки
+	int a = -1; //номер 1 пациента
+	int b = -1; //номер 2 пациента
+	
+
+	for (i = 0; i < 12; i++) {
+		for (j = 0; j < 15; j++) {
+			if (str1[j] == table[i].surname[j]) {
+				k++;
+			}
+		}
+		if (k == 15) {
+			a = i;
+			break;
+		}
+		k = 0;
+	}
+
+	if (a == -1) {
+		std::cout << "Неверно указана фамилия первого пациента";
+		return 0;
+	}
+
+	k = 0;
+
+	for (i = 0; i < 12; i++) {
+		for (j = 0; j < 15; j++) {
+			if (str2[j] == table[i].surname[j]) {
+				k++;
+			}
+		}
+		if (k == 15) {
+			b = i;
+			break;
+		}
+		k = 0;
+	}
+
+	if (b == -1) {
+		std::cout << "Неверно указана фамилия второго пациента";
+		return 0;
+	}
+
+	if (a < b) {
+		std::cout << "Пациент уже был у доктора";
+		return 0;
+	}
+
+	if (a == b) {
+		std::cout << "Пациент только что зашёл к доктору";
+		return 0;
+	}
+
+	std::cout << "Пациенту с фамилией " << str1 << ' ' << "осталось ждать " << (a - b) * 20 << ' ' << "минут";
+
+
+	return 0;
+
+}
+//1.	В файле дана информация записавшихся на прием к врачу: фамилия (15 символов), возраст (целое). 
+//В списке не более 12 пациентов. На каждого пациента врач тратит 20 минут. 
+//Определить, сколько ждать в очереди пациенту с фамилей str1, если в кабинет врача зашел пациент с фамилией str2 (значения str1 и str2 вводить с клавиатуры).
