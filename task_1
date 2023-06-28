@@ -1,0 +1,82 @@
+#include <iostream>
+#include <stdio.h>
+
+using namespace std;
+
+
+struct elems {
+	int  num = 0;
+	float time = 0;
+	int mark = 0;
+};
+
+struct table {
+	elems el[10];
+};
+
+void del(table* t, int key, int* count) {
+	for (int i = 0; i < *count; i++) {
+		if (t->el[i].num == key) {
+			for (int j = i; j < *count; j++) {
+				t->el[j] = t->el[j + 1];
+			}
+			*count -= 1;
+			break;
+		}
+	}
+}
+
+
+int main()
+{
+	int  flag = 0;
+	char prob = ' ';
+	int m = 10;
+	table* t = new table;
+	int num = 0;
+	float time = 0, mark = 0;
+	FILE* fp;
+	fopen_s(&fp, "D:\input.txt", "r");
+	if (fp == NULL) {
+		printf("Ошибка файла");
+	}
+	else {
+		for (int i = 0; i < m; i++)
+		{
+			fscanf_s(fp, "%d", &num);
+			if (feof(fp)) {
+				m = i;
+				break;
+			}
+			t->el[i].num = num;
+			fscanf_s(fp, "%c", &prob, 1);
+			fscanf_s(fp, "%f", &time);
+			t->el[i].time = time;
+			fscanf_s(fp, "%c", &prob, 1);
+			fscanf_s(fp, "%f", &mark);
+			t->el[i].mark = mark;
+			fscanf_s(fp, "%c", &prob, 1);
+		}
+		fclose(fp);
+	}
+	int count = 0;
+	while (count != 3) {
+		int winner_num = 0;
+		int high_mark = 0;
+		float min_time = 9999;
+		for (int i = 0; i < m; i++) {
+			if ((t->el[i].mark == high_mark and t->el[i].time<min_time) or (t->el[i].mark>high_mark)) {
+				high_mark = t->el[i].mark;
+				min_time = t->el[i].time;
+				winner_num = t->el[i].num;
+			}
+		}
+		cout <<count+1<<' ' << "place is: " << winner_num << '\n';
+		del(t, winner_num, &m);
+		count += 1;
+	}
+}
+//1.	В конкурсе поваров было участников, n ≤ 50. 
+//В таблице хранится информация о результатах конкурса.
+//Элемент таблицы имеет следующую структуру : номер участника, время приготовления блюда(вещественное), оценка жюри(целое число от 0 до 10).
+//Найти номера трех самых быстрых участников из тех, кто больше всего понравился жюри.
